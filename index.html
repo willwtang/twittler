@@ -3,25 +3,68 @@
   <head>
     <script src="jquery.js"></script>
     <script src="data_generator.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
   </head>
+  <header>
+    TWITTLER 
+  </header>
   <body>
-    <script>
+    <div id="self">
+    </div>
+    <div class="update"><a class="update" href="#">See new tweets.</a>
+    </div>
+    <div class="tweets">
+      <script>
 
-      $(document).ready(function(){
-        var $body = $('body');
-        $body.html('');
+        $(document).ready(function(){
+          var $body = $('body div.tweets');
+          var index = 0;
 
-        var index = streams.home.length - 1;
-        while(index >= 0){
-          var tweet = streams.home[index];
-          var $tweet = $('<div></div>');
-          $tweet.text('@' + tweet.user + ': ' + tweet.message);
-          $tweet.appendTo($body);
-          index -= 1;
-        }
+          function updateTweets(name) {
+            //$body.html('');
+            var end = streams.home.length - 1;
+            while(index < end){
+                
+              var tweet = streams.home[index];
+              var $tweet = $('<div class="tweet"><div class="avatar"><div id="inneravatar"></div></div><div class="m"></div></div>');
+              $tweet.prependTo($body);
 
-      });
+              var $name = $('<p class="name"><a class="name" href="#">' + tweet.user + '</a>   ' + '<span class="date">' + tweet.created_at + '</span></span>');
+              var $message = $('<p class="message">' + tweet.message + '</p>');
 
-    </script>
+              var $m = $('div.m').first();
+
+              $m.append($name);
+              $m.append($message);
+
+              if (index > 9) $('div.tweet').last().remove();
+              index += 1;
+            }
+
+          }
+
+          function userTweets() {
+
+          }
+          updateTweets();
+          $('a.update').on('click', function(event){ 
+            event.stopPropagation();
+            $('.tweet').hide();
+            updateTweets();
+            $('.tweet').slideDown(); 
+          });
+          //$('a.name').on('click')
+          $('div.tweet').on('mouseenter', function() {
+            $(this).css('background', 'rgba(230, 230, 230, .5)');
+          });
+          $('div.tweet').on('mouseleave', function() {
+            $(this).css('background', '#fff');
+          });
+          //setInterval(updateTweets,1501);
+
+        });
+
+      </script>
+    </div>
   </body>
 </html>
