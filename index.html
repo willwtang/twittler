@@ -24,6 +24,7 @@
 
           var start;
           var stop;
+          var page = "home";
 
           function updateTweets(name) {
 
@@ -73,20 +74,21 @@
 
           updateTweets();
 
-          function clickUpdate() {
+          function clickUpdate(name) {
             $('.tweets').slideUp();
-            updateTweets();
+            updateTweets(name);
             $('.tweets').slideDown(); 
           }
           $('div.update').on('click', 'a.update', function(event){ 
             event.stopPropagation();
-            clickUpdate();
+            if (!page) clickUpdate();
+            else clickUpdate(page);
           });
           $('div.tweets').on('click', 'a.name', function(event){
             //event.stopPropagation();
-            var name = $(this).text();
+            page = $(this).text();
             $('.tweet').slideUp();
-            updateTweets(name);
+            updateTweets(page);
             $('.tweet').slideDown();
           })
           $('div.tweets').on('mouseenter', 'div.tweet', function() {
@@ -144,6 +146,7 @@
           $('a.bird').click(function(e){
             e.stopPropagation();
             clickUpdate();
+            page = null;
           })
 
           if ($(window).scrollTop() + $(window).height() > $(document).height() - 100) { 
