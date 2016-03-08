@@ -12,10 +12,12 @@ streams.users.sharksforcheap = [];
 streams.users.mracus = [];
 streams.users.douglascalhoun = [];
 window.users = Object.keys(streams.users);
+window.visitor;
 
 // utility function for adding tweets to our data structures
 var addTweet = function(newTweet){
   var username = newTweet.user;
+  if (!streams.users[username]) streams.users[username] = [];
   streams.users[username].push(newTweet);
   streams.home.push(newTweet);
 };
@@ -58,12 +60,43 @@ scheduleNextTweet();
 
 // utility function for letting students add "write a tweet" functionality
 // (note: not used by the rest of this file.)
-var writeTweet = function(message){
-  if(!visitor){
+var writeTweet = function(message, visitor){
+  /*if(!visitor){
     throw new Error('set the global visitor property!');
-  }
+  }*/
   var tweet = {};
   tweet.user = visitor;
   tweet.message = message;
+  tweet.created_at = new Date();
   addTweet(tweet);
+  return tweet;
 };
+
+// Find and use a date library
+function timeSince(date) {
+
+  var seconds = Math.floor((new Date() - date) / 1000);
+
+  var interval = Math.floor(seconds / 31536000);
+
+  if (interval > 1) {
+      return interval + " years";
+  }
+  interval = Math.floor(seconds / 2592000);
+  if (interval > 1) {
+      return interval + " months";
+  }
+  interval = Math.floor(seconds / 86400);
+  if (interval > 1) {
+      return interval + "d";
+  }
+  interval = Math.floor(seconds / 3600);
+  if (interval > 1) {
+      return interval + "h";
+  }
+  interval = Math.floor(seconds / 60);
+  if (interval > 1) {
+      return interval + "m";
+  }
+  return Math.floor(seconds) + "s";
+}
