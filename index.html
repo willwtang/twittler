@@ -10,6 +10,8 @@
   </header>
   <body>
     <div id="self">
+      <textarea placeholder="What's happening?"></textarea>
+      <div id="visitor"><input placeholder="visitor"></input><a href="#" class="button"><img src="tweet.png" width="100px" height="auto"></img></a></div>
     </div>
     <div class="update"><a class="update" href="#">See new tweets.</a>
     </div>
@@ -17,50 +19,127 @@
       <script>
 
         $(document).ready(function(){
-          var $body = $('body div.tweets');
-          var index = 0;
+          var $tweetDiv = $('div.tweets');
+          var mode = 0;
+
+          var start;
+          var stop;
 
           function updateTweets(name) {
-            //$body.html('');
-            var end = streams.home.length - 1;
-            while(index < end){
-                
-              var tweet = streams.home[index];
-              var $tweet = $('<div class="tweet"><div class="avatar"><div id="inneravatar"></div></div><div class="m"></div></div>');
-              $tweet.prependTo($body);
 
-              var $name = $('<p class="name"><a class="name" href="#">' + tweet.user + '</a>   ' + '<span class="date">' + tweet.created_at + '</span></span>');
-              var $message = $('<p class="message">' + tweet.message + '</p>');
-
-              var $m = $('div.m').first();
-
-              $m.append($name);
-              $m.append($message);
-
-              if (index > 9) $('div.tweet').last().remove();
-              index += 1;
+            $tweetDiv.html('');
+            if (!name) {
+              var stop = streams.home.length;
+              var start = (stop - 20 < 0) ? 0 : (stop - 20);
+            } else {
+              var stop = streams.users[name].length;
+              var start = 0;
             }
 
+            generateTweets(start, stop, name);
           }
 
-          function userTweets() {
+          function loadMoreTweets() {
+            stop = start - 1;
+            start = (stop - 10 < 0) ? 0 : (stop - 10);
 
+            generateTweets(start, stop);
           }
+
+          function generateTweets(index, end, name) {
+            while(index < end){
+              if (!name) var tweet = streams.home[index];
+              else var tweet = streams.users[name][index];
+              tweetHTML(tweet);
+
+              //if (index > 9) $('div.tweet').last().remove();
+              index += 1;
+            }
+            start = index;
+          }
+
+          function tweetHTML(tweet) {
+            var time = timeSince(tweet.created_at);
+
+            var $tweet = $('<div class="tweet"><div class="avatar"><div id="inneravatar">PHOTO</div></div><div class="m"><p class="name"><a class="name" href="#">' + tweet.user + '</a>   ' + '<span class="date">' + time + '</span></p><p class="message">' + tweet.message + '</p></div></div>');
+            $tweet.prependTo($tweetDiv);
+            //var $name = $('<p class="name"><a class="name" href="#">' + tweet.user + '</a>   ' + '<span class="date">' + time + '</span></p>');
+            //var $message = $('<p class="message">' + tweet.message + '</p>');
+            //var $m = $('div.m').first();
+
+            //$m.append($name);
+            //$m.append($message);
+          }
+
           updateTweets();
-          $('a.update').on('click', function(event){ 
+          $('div.update').on('click', 'a.update', function(event){ 
             event.stopPropagation();
-            $('.tweet').hide();
+            $('.tweets').slideUp();
             updateTweets();
-            $('.tweet').slideDown(); 
+            $('.tweets').slideDown(); 
           });
-          //$('a.name').on('click')
-          $('div.tweet').on('mouseenter', function() {
+          $('div.tweets').on('click', 'a.name', function(event){
+            //event.stopPropagation();
+            var name = $(this).text();
+            $('.tweet').slideUp();
+            updateTweets(name);
+            $('.tweet').slideDown();
+          })
+          $('div.tweets').on('mouseenter', 'div.tweet', function() {
             $(this).css('background', 'rgba(230, 230, 230, .5)');
           });
-          $('div.tweet').on('mouseleave', function() {
+          $('div.tweets').on('mouseleave', 'div.tweet', function() {
             $(this).css('background', '#fff');
           });
-          //setInterval(updateTweets,1501);
+
+          var added = 0;
+          $('div#self').on('click', 'textarea', function(e) {
+            $(this).addClass('expanded');
+            $('div#self').addClass('expanded');
+            /*if ($('div#visitor').is(':empty')){
+              var $visitor = $('<input placeholder="visitor"></input><span class="button"><img src="tweet.png" width="100px" height="auto"></img></span>');
+              $('div#visitor').append($visitor);
+            }*/
+            $('div#visitor').show();
+            e.stopPropagation();
+          });
+
+          function hideTweetFields() {
+            $('div#self').removeClass('expanded');
+            $('textarea').removeClass('expanded');
+            $('div#visitor').hide();
+          }
+
+          $('body').click(function(e){
+            if(!$(e.target).is('input') && !$(e.target).is('textarea') && !$(e.target).is('a.button')) {
+              hideTweetFields();
+            }
+            e.stopPropagation();
+          });
+
+          $('div#visitor').on('click', 'a.button', function() {
+            var message = $('textarea').val();
+            var visitor = $('input').val();
+
+            if(message && visitor) {
+              var newTweet = writeTweet(message, visitor);
+              tweetHTML(newTweet);
+              console.log(newTweet);
+            } else if (!message) {
+              alert('Tweet SOMETHING!');
+              return;
+            } else if (!visitor) {
+              alert('Enter a name');
+              return;
+            }
+
+            $('textarea').val('');
+            $('input').val('');
+          })
+
+          if ($(window).scrollTop() + $(window).height() > $(document).height() - 100) { 
+              loadMoreTweets(); 
+          } 
 
         });
 
