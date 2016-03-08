@@ -1,0 +1,138 @@
+* {
+	box-sizing: border-box;
+	font-family: "Helvetica Neue", Arial, serif;
+}
+
+body {
+	margin: 0;
+	padding: 0;
+}
+
+a {
+	text-decoration: none;
+	color: black;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+body {
+	background: rgba(230, 230, 230, .5);
+} 
+
+header {
+	background: #fff;
+	height: 50px;
+	margin-bottom: 15px;
+}
+
+div#self.expanded {
+	height: 250px;
+}
+
+textarea, input{
+	display: block;
+	margin: 10px auto;
+	border: 1px solid rgba(180, 200, 247, 2);
+	width: 400px;
+	height: 28px;
+	font-size: 15px;
+	text-decoration: none;
+	vertical-align: center;
+	transition: all .5s ease;
+}
+
+textarea.expanded {
+	width: 450px !important;
+	height: 150px !important;
+}
+
+input {
+	display: inline-block;
+	margin-left: 75px;
+	height: 28px;
+	width: 200px;
+	transition: all 0s;
+}
+
+a.button {
+	display: inline;
+	float: right;
+	visibility: visible;
+	margin-right: 75px;
+}
+
+div.update {
+	width: 50%;
+	margin: 0 auto;
+	border: 1px solid rgba(128, 128, 128, .4);
+	border-top: none;
+	text-align: center;
+	vertical-align: center;
+	background: #fff;
+}
+
+div#self {
+	border-top-left-radius: 10px;
+	border-top-right-radius: 10px;
+	width: 50%;
+	margin: 0 auto;
+	border: 1px solid rgba(128, 128, 128, .4);
+	height: 50px;
+	background: #E5F2F7;
+	transition: all 0.5s ease;
+}
+
+div.tweet {
+	width: 50%;
+	margin: 0 auto;
+	border: 1px solid rgba(128, 128, 128, .4);
+	border-top: none;
+	display: flex;
+	background: #fff;
+}
+
+p.name {
+	font-weight: bold;
+	margin: 5px;
+	font-family: "Helvetica Neue", Arial, serif;
+}
+
+p.message {
+	margin: 5px;
+	width: 100%;
+}
+
+span.date {
+	font-size: 12px;
+	font-weight: normal;
+	opacity: .5;
+}
+div.avatar {
+	width: 10%;
+	display: table-cell;
+	vertical-align: left;
+}
+
+div#inneravatar {
+	margin: 10px auto;
+	width: 40px;
+	height: 40px;
+	border: 2px solid #0384b4;
+	border-radius: 5px;
+	background: #0384b4;
+	font-size: 8px;
+	color: #fff;
+	text-align: center;
+}
+
+div.m {
+	display: table-cell;
+	vertical-align: right;
+	width: 90%;
+}
+
+div#visitor {
+	display: none;
+}
