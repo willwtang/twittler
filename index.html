@@ -5,13 +5,13 @@
     <script src="data_generator.js"></script>
     <link rel="stylesheet" type="text/css" href="style.css">
   </head>
-  <header>
-    TWITTLER 
-  </header>
   <body>
+    <header>
+      <center><div class="bird"><a href="#" class="bird"><img class="bird" src="home.png" width="auto" height="80px"></a></div></center>
+    </header>
     <div id="self">
       <textarea placeholder="What's happening?"></textarea>
-      <div id="visitor"><input placeholder="visitor"></input><a href="#" class="button"><img src="tweet.png" width="100px" height="auto"></img></a></div>
+      <div id="visitor"><input placeholder="visitor"></input><a href="#" class="button"><img src="tweet.png" width="100px" height="auto"></a></div>
     </div>
     <div class="update"><a class="update" href="#">See new tweets.</a>
     </div>
@@ -72,11 +72,15 @@
           }
 
           updateTweets();
-          $('div.update').on('click', 'a.update', function(event){ 
-            event.stopPropagation();
+
+          function clickUpdate() {
             $('.tweets').slideUp();
             updateTweets();
             $('.tweets').slideDown(); 
+          }
+          $('div.update').on('click', 'a.update', function(event){ 
+            event.stopPropagation();
+            clickUpdate();
           });
           $('div.tweets').on('click', 'a.name', function(event){
             //event.stopPropagation();
@@ -135,6 +139,11 @@
 
             $('textarea').val('');
             $('input').val('');
+          });
+
+          $('a.bird').click(function(e){
+            e.stopPropagation();
+            clickUpdate();
           })
 
           if ($(window).scrollTop() + $(window).height() > $(document).height() - 100) { 
