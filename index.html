@@ -41,10 +41,10 @@
           }
 
           function loadMoreTweets() {
-            stop = start - 1;
+            stop = start;
             start = (stop - 10 < 0) ? 0 : (stop - 10);
 
-            generateTweets(start, stop, "bottom");
+            if (stop > 0) generateTweets(start, stop, "bottom");
           }
 
           function generateTweets(index, end, position, name) {
@@ -56,13 +56,12 @@
               //if (index > 9) $('div.tweet').last().remove();
               index += 1;
             }
-            start = index;
           }
 
           function tweetHTML(tweet, position) {
             var time = timeSince(tweet.created_at);
 
-            var $tweet = $('<div class="tweet"><div class="avatar"><div id="inneravatar">PHOTO</div></div><div class="m"><p class="name"><a class="name" href="#">' + tweet.user + '</a>   ' + '<span class="date">' + time + '</span></p><p class="message">' + tweet.message + '</p></div></div>');
+            var $tweet = $('<div class="tweet"><div class="avatar"><div id="inneravatar">PHOTO</div></div><div class="m"><p class="name"><a class="name" href="#">' + tweet.user +'</a>   ' + '<span class="date">' + time + '</span></p><p class="message">' + tweet.message + '</p></div></div>');
             if (!position || position === "top") $tweet.prependTo($tweetDiv);
             else if (position === "bottom") $tweet.appendTo($tweetDiv);
             //var $name = $('<p class="name"><a class="name" href="#">' + tweet.user + '</a>   ' + '<span class="date">' + time + '</span></p>');
