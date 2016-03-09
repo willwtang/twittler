@@ -30,28 +30,28 @@
 
             $tweetDiv.html('');
             if (!name) {
-              var stop = streams.home.length;
-              var start = (stop - 20 < 0) ? 0 : (stop - 20);
+              stop = streams.home.length;
+              start = (stop - 20 < 0) ? 0 : (stop - 20);
             } else {
-              var stop = streams.users[name].length;
-              var start = 0;
+              stop = streams.users[name].length;
+              start = 0;
             }
 
-            generateTweets(start, stop, name);
+            generateTweets(start, stop, "top", name);
           }
 
           function loadMoreTweets() {
             stop = start - 1;
             start = (stop - 10 < 0) ? 0 : (stop - 10);
 
-            generateTweets(start, stop);
+            generateTweets(start, stop, "bottom");
           }
 
-          function generateTweets(index, end, name) {
+          function generateTweets(index, end, position, name) {
             while(index < end){
               if (!name) var tweet = streams.home[index];
               else var tweet = streams.users[name][index];
-              tweetHTML(tweet);
+              tweetHTML(tweet, position);
 
               //if (index > 9) $('div.tweet').last().remove();
               index += 1;
@@ -59,11 +59,12 @@
             start = index;
           }
 
-          function tweetHTML(tweet) {
+          function tweetHTML(tweet, position) {
             var time = timeSince(tweet.created_at);
 
             var $tweet = $('<div class="tweet"><div class="avatar"><div id="inneravatar">PHOTO</div></div><div class="m"><p class="name"><a class="name" href="#">' + tweet.user + '</a>   ' + '<span class="date">' + time + '</span></p><p class="message">' + tweet.message + '</p></div></div>');
-            $tweet.prependTo($tweetDiv);
+            if (!position || position === "top") $tweet.prependTo($tweetDiv);
+            else if (position === "bottom") $tweet.appendTo($tweetDiv);
             //var $name = $('<p class="name"><a class="name" href="#">' + tweet.user + '</a>   ' + '<span class="date">' + time + '</span></p>');
             //var $message = $('<p class="message">' + tweet.message + '</p>');
             //var $m = $('div.m').first();
@@ -147,11 +148,17 @@
             e.stopPropagation();
             clickUpdate();
             page = null;
-          })
+          });
 
-          if ($(window).scrollTop() + $(window).height() > $(document).height() - 100) { 
-              loadMoreTweets(); 
-          } 
+          console.log(start, stop)
+
+          //setTimeout(function() { console.log(start, stop); loadMoreTweets(); }, 5000);
+          //setTimeout(function() { console.log(start, stop); loadMoreTweets(); }, 10000);
+          $(window).scroll(function () {
+            if ($(document).height() <= $(window).scrollTop() + $(window).height()) {
+              loadMoreTweets();
+            }
+          });
 
         });
 
